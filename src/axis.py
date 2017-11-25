@@ -74,3 +74,12 @@ class Axis:
         self.mot.setDistance(self.distance)
         self.mot.setSpeed(self.direction * self.speed)
         self.pos = pos  # set current position to new position
+
+    def getCurrentPosition(self):
+        # calculate the current position dependeding on the current direction, move distance and target position
+        if self.direction == 0:
+            return(self.pos)
+        elif self.direction == 1:
+            return(self.pos + self.distance - self.mot.getCurrentDistance())
+        elif self.direction == -1:
+            return(self.pos - self.distance + self.mot.getCurrentDistance())
