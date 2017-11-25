@@ -17,11 +17,13 @@ XAxis.maxPos = 7700
 XAxis.initialize()
 
 # move a bit away from the init position to "present" the X-Axis
-XAxis.goPos(250)
+XAxis.goPos(2000)
 while not XAxis.posReached():
-    pass
+    print(XAxis.getCurrentPosition())
+    time.sleep(1)
 time.sleep(1)
 # move back to 0
 XAxis.goPos(0)
 while not XAxis.posReached():
-    pass
+    print(XAxis.getCurrentPosition())
+    time.sleep(1)
