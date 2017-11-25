@@ -3,6 +3,7 @@
 #
 
 import time
+from _thread import start_new_thread
 
 
 class Axis:
@@ -24,6 +25,9 @@ class Axis:
         self.initialized = False
         self.pos = 0
         self.maxPos = -1
+        self.wdInterval = 0.1
+        self.wdStrikeTime = 2
+        self.wdMinMoveAlertReset = 20
         # initialize all end stops
         self.end = []
         for e in set(end):
@@ -83,3 +87,41 @@ class Axis:
             return(self.pos + self.distance - self.mot.getCurrentDistance())
         elif self.direction == -1:
             return(self.pos - self.distance + self.mot.getCurrentDistance())
+
+    def watchdog(self):
+        # watchdogthread to monitor the motor and restart it in case of stuck
+        # initialize variables
+        # saves the last seen position, if pos is reached, set to 0
+        lastPos = 0
+        # saves the time of stuck, 0 if moving/pos reached
+        motStop = 0
+        while True:
+            start = time.time()  # save start time of round
+            if not self.posReached():  # execute only if target position is not reached
+                if lastPos == self.mot.getCurrentDistance():  # detect a stucking motor
+                    if motStop == 0:
+                        # set time of stuck if this was the first time we detected a stucking motor
+                        motStop = time.time()
+                else:
+                    # motor is runnig :) Save this!
+                    motStop = 0
+                if motStop != 0 and motStop + self.wdStrikeTime < time.time():
+                    # detect that the motor is stuckig for a longer time
+                    # reanimate the motor until it is runnig ;-)
+                    while lastPos + self.wdMinMoveAlertReset > self.mot.getCurrentDistance():
+                        # stop the motor for a moment and restart it
+                        self.mot.setSpeed(0)
+                        time.sleep(1)
+                        self.mot.setSpeed(self.direction * self.speed)
+                        time.sleep(4)
+                    motStop = 0  # motor is runnig :) Save this!
+                lastPos = self.mot.getCurrentDistance()  # save the last moving position
+            else:
+                lastPos = 0  # reset last moving position
+            # wait until nex round starts
+            if self.wdInterval > time.time() - start:
+                time.sleep(self.wdInterval - time.time() + start)
+
+    def startWatchdog(self):
+        # start the watchdog
+        start_new_thread(self.watchdog, ())
