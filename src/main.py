@@ -15,6 +15,7 @@ XAxis = Axis(txt, 1, [1, 2])
 XAxis.maxPos = 7700
 # initialize X-Axis
 XAxis.initialize()
+XAxis.startWatchdog()
 
 # move a bit away from the init position to "present" the X-Axis
 XAxis.goPos(2000)
