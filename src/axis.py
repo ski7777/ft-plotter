@@ -19,6 +19,8 @@ class Axis:
         self.mot.setDistance(0)
         self.speed = 512
         self.initSpeed = 512
+        self.direction = 0
+        self.distance = 0
         self.initialized = False
         self.pos = 0
         self.maxPos = -1
@@ -58,11 +60,17 @@ class Axis:
         # prepare by setting speed and distance to 0
         self.mot.setSpeed(0)
         self.mot.setDistance(0)
-        # caalculate speed and distance depended on the target position relative to current position
+        # calculate speed and distance depended on the target position relative to current position
         if pos < self.pos:
-            self.mot.setDistance(self.pos - pos)
-            self.mot.setSpeed(self.speed)
+            self.distance = self.pos - pos
+            self.direction = 1
         elif pos > self.pos:
-            self.mot.setDistance(pos - self.pos)
-            self.mot.setSpeed(-self.speed)
+            self.distance = pos - self.pos
+            self.direction = -1
+        else:
+            self.distance = 0
+            self.direction = 0
+        # send the values to the motor
+        self.mot.setDistance(self.distance)
+        self.mot.setSpeed(self.direction * self.speed)
         self.pos = pos  # set current position to new position
