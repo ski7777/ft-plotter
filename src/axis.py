@@ -44,7 +44,7 @@ class Axis:
     def initialize(self):
         # initialize the axis
         if not self.checkAllEndPressed():  # initialize only if needed
-            self.mot.setSpeed(self.initSpeed)
+            self.mot.setSpeed(-self.initSpeed)
             while not self.checkAllEndPressed():  # check whether init position is reached
                 time.sleep(0.1)
             self.mot.setSpeed(0)
@@ -67,10 +67,10 @@ class Axis:
         # calculate speed and distance depended on the target position relative to current position
         if pos < self.pos:
             self.distance = self.pos - pos
-            self.direction = 1
+            self.direction = -1
         elif pos > self.pos:
             self.distance = pos - self.pos
-            self.direction = -1
+            self.direction = 1
         else:
             self.distance = 0
             self.direction = 0
@@ -83,9 +83,9 @@ class Axis:
         # calculate the current position dependeding on the current direction, move distance and target position
         if self.direction == 0:
             return(self.pos)
-        elif self.direction == 1:
-            return(self.pos + self.distance - self.mot.getCurrentDistance())
         elif self.direction == -1:
+            return(self.pos + self.distance - self.mot.getCurrentDistance())
+        elif self.direction == 1:
             return(self.pos - self.distance + self.mot.getCurrentDistance())
 
     def watchdog(self):
