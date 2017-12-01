@@ -5,6 +5,8 @@
 import time
 from _thread import start_new_thread
 
+__all__ = ['Axis']
+
 
 class Axis:
     # outer is a ftrobopy(-like) object
@@ -58,6 +60,7 @@ class Axis:
         return(self.mot.finished())
 
     def goPos(self, pos):
+        assert(type(pos) == int)
         # move to target position independent of current position
         # check whether target position is in range of axis (if set)
         if self.maxPos != -1:
