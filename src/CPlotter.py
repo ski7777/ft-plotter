@@ -10,7 +10,7 @@ import time
 __all__ = ['Plotter']
 
 
-linearMaxStep = 50
+linearMaxStep = 25
 
 
 class Plotter:
@@ -20,11 +20,11 @@ class Plotter:
 
         # prepare X-Axis
         self.XAxis = Axis(self.txt, 1, [1, 2])
-        self.XAxis.maxPos = 7700
+        self.XAxis.maxPos = 6500
 
         # prepare Y-Axis
         self.YAxis = Axis(self.txt, 2, [3])  # not built yet...
-        #self.YAxis.maxPos = 7700
+        self.YAxis.maxPos = 9000
 
         # initialize X-Axis
         self.XAxis.initialize()
