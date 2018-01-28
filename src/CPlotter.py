@@ -45,6 +45,12 @@ class Plotter:
     def posY(self):
         return(self.__posY)
 
+    def initialize(self):
+        self.XAxis.initialize()
+        self.YAxis.initialize()
+        self.__posX = 0
+        self.__posY = 0
+
     def moveDirect(self, x, y):
         assert(type(x) == int and type(y) == int)
         self.XAxis.goPos(x)
