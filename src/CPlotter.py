@@ -61,6 +61,7 @@ class Plotter:
         return(int(round(point[0])), int(round(point[1])))
 
     def moveLinear(self, x, y):
+        assert(type(x) == int and type(y) == int)
         # check whether we need to move, otherwise exit
         if self.posX == x and self.posY == y:
             return
@@ -86,7 +87,7 @@ class Plotter:
                 step = -step
         else:
             # Y-Axis needs to be moved further
-            yStep = linearMaxStep  # maximum range between two y coordinates
+            step = linearMaxStep  # maximum range between two y coordinates
             start = self.posY  # y value start
             stop = y  # y xalue stop
             direction = 1  # direction (x/y) -> y
@@ -104,5 +105,4 @@ class Plotter:
         # move to the points
         for xp, yp in points:
             xp, yp = self.roundPoint((xp, yp))
-            print(xp, yp)
             self.moveDirect(xp, yp)
