@@ -48,11 +48,17 @@ class Axis:
     def initialize(self):
         # initialize the axis
         if not self.checkAllEndPressed():  # initialize only if needed
+            self.mot.stop()
             self.mot.setSpeed(-self.initSpeed)
             while not self.checkAllEndPressed():  # check whether init position is reached
                 time.sleep(0.1)
             self.mot.setSpeed(0)  # use setSpeed, not stop! It would reset the finished state! --> AssertError
         self.initialized = True
+        self.pos = 0
+        #time.sleep(0.5)
+        self.goPos(75)
+        while not self.posReached():
+            pass
         self.pos = 0
 
     def posReached(self):
